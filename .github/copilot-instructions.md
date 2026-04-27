@@ -10,6 +10,7 @@
 modbus-tcpmaster/
 ├── .github/
 │   └── copilot-instructions.md   # This file
+├── .gitignore
 ├── MP2300SController.h           # Public API: MP2300SController ref class declaration
 ├── MP2300SController.cpp         # Modbus TCP protocol implementation
 ├── Main.cpp                      # Interactive console test harness
@@ -19,11 +20,12 @@ modbus-tcpmaster/
 ├── resource.h                    # Resource definitions
 ├── app.rc                        # Application resource script
 ├── app.ico                       # Application icon
-├── app.aps                       # Visual Studio resource editor cache (not committed)
+├── app.aps                       # Visual Studio resource editor cache
 ├── ModbusTCPMaster.sln           # Visual Studio solution file
 ├── ModbusTCPMaster.vcxproj       # Visual Studio project file (C++/CLI DLL)
 ├── ModbusTCPMaster.vcxproj.filters  # Source file filters for Solution Explorer
-├── ModbusTCPMaster.vcxproj.user     # Per-user project settings (not committed)
+├── ModbusTCPMaster.vcxproj.user     # Per-user project settings
+├── CHANGELOG.md
 ├── CONTRIBUTING.md
 ├── LICENSE
 └── README.md

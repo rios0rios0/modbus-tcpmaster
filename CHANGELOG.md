@@ -20,6 +20,8 @@ Exceptions are acceptable depending on the circumstances (critical bug fixes tha
 
 ### Changed
 
+- refreshed `.github/copilot-instructions.md` to add `CHANGELOG.md` and `.gitignore` to the repository structure and correct tracked-file annotations
+
 ### Removed
 
 
