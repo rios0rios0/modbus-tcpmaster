@@ -9,7 +9,9 @@
 ```
 modbus-tcpmaster/
 ├── .github/
-│   └── copilot-instructions.md   # This file
+│   ├── copilot-instructions.md   # This file
+│   └── workflows/
+│       └── release.yaml          # Automated release pipeline (reusable workflow)
 ├── .gitignore
 ├── MP2300SController.h           # Public API: MP2300SController ref class declaration
 ├── MP2300SController.cpp         # Modbus TCP protocol implementation
@@ -64,9 +66,11 @@ modbus-tcpmaster/
 | Slave address | 1 | Hard-coded unit identifier |
 | Function code | 16 (0x10) | Write Multiple Registers |
 
-## Build Commands
+## CI / Release
 
-There is no automated CI pipeline. Builds are performed locally with Visual Studio or MSBuild on Windows.
+A `release.yaml` workflow runs on every push to `main` and delegates to a reusable pipeline in `rios0rios0/pipelines`. There is no build or test CI — builds are performed locally with Visual Studio or MSBuild on Windows.
+
+## Build Commands
 
 ### Visual Studio (recommended)
 
