@@ -10,9 +10,17 @@
 modbus-tcpmaster/
 ├── .github/
 │   ├── copilot-instructions.md   # This file
+│   ├── skills/
+│   │   └── code-review/
+│   │       └── SKILL.md          # Copilot code-review skill for this repo
 │   └── workflows/
-│       └── release.yaml          # Automated release pipeline (reusable workflow)
+│       ├── release.yaml          # Automated release pipeline (reusable workflow)
+│       ├── claude-review.yaml    # Claude automated PR review (reusable workflow)
+│       └── claude-mention.yaml   # @claude mention responder (reusable workflow)
+├── .changes/
+│   └── unreleased/               # chlog fragments awaiting the next release
 ├── .gitignore
+├── CLAUDE.md                     # Guidance for Claude Code sessions
 ├── MP2300SController.h           # Public API: MP2300SController ref class declaration
 ├── MP2300SController.cpp         # Modbus TCP protocol implementation
 ├── Main.cpp                      # Interactive console test harness
@@ -27,7 +35,7 @@ modbus-tcpmaster/
 ├── ModbusTCPMaster.vcxproj       # Visual Studio project file (C++/CLI DLL)
 ├── ModbusTCPMaster.vcxproj.filters  # Source file filters for Solution Explorer
 ├── ModbusTCPMaster.vcxproj.user     # Per-user project settings
-├── CHANGELOG.md
+├── CHANGELOG.md                  # Generated from chlog fragments — never hand-edited
 ├── CONTRIBUTING.md
 ├── LICENSE
 └── README.md
@@ -68,7 +76,7 @@ modbus-tcpmaster/
 
 ## CI / Release
 
-A `release.yaml` workflow runs on every push to `main` and delegates to a reusable pipeline in `rios0rios0/pipelines`. There is no build or test CI — builds are performed locally with Visual Studio or MSBuild on Windows.
+A `release.yaml` workflow runs on every push to `main` and delegates to a reusable pipeline in `rios0rios0/pipelines`. Two event-driven workflows — `claude-review.yaml` (automated pull-request review) and `claude-mention.yaml` (`@claude` mention responder) — call the matching reusable workflows in `rios0rios0/pipelines` and authenticate with the `CLAUDE_CODE_OAUTH_TOKEN` secret. There is no build or test CI — builds are performed locally with Visual Studio or MSBuild on Windows.
 
 ## Build Commands
 
