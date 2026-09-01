@@ -22,6 +22,12 @@ Exceptions are acceptable depending on the circumstances (critical bug fixes tha
 
 ## [Unreleased]
 
+## [0.4.1] - 2026-09-01
+
+### Changed
+
+- refreshed `.github/copilot-instructions.md` so its repository-structure diagram lists `CLAUDE.md`, the `code-review` skill, the `.changes/` chlog directory, and the `claude-review.yaml` / `claude-mention.yaml` workflows, and its CI section documents the Claude review and mention workflows
+
 ## [0.4.0] - 2026-08-28
 
 ### Added

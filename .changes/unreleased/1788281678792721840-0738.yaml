@@ -1,3 +1,0 @@
-kind: 'Changed'
-body: 'refreshed `.github/copilot-instructions.md` so its repository-structure diagram lists `CLAUDE.md`, the `code-review` skill, the `.changes/` chlog directory, and the `claude-review.yaml` / `claude-mention.yaml` workflows, and its CI section documents the Claude review and mention workflows'
-time: '2026-09-01T16:54:38.79266283Z'
