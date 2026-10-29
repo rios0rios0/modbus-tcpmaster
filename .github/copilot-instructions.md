@@ -87,7 +87,7 @@ A `release.yaml` workflow runs on every push to `main` and delegates to a reusab
 1. Open `ModbusTCPMaster.sln` in Visual Studio 2019 or later.
 2. Select **Debug** or **Release** configuration and **x86** or **x64** platform.
 3. Press `Ctrl+Shift+B` (or **Build › Build Solution**).
-4. x86 output goes to `Debug\` or `Release\`, x64 output to `x64\Debug\` or `x64\Release\`. Only Debug|x86 builds the console `.exe`; the others build the DLL. `.gitignore` is saved as UTF-16 LE, which Git does not decode, so it ignores none of these directories — never commit `Debug\`, `Release\`, `x64\` or `.vs\`.
+4. x86 output goes to `Debug\` or `Release\`, x64 output to `x64\Debug\` or `x64\Release\`. Only Debug|x86 builds the console `.exe`; the others build the DLL. `.gitignore` ignores all of these directories and `.vs\`; keep it UTF-8, because Git ignores nothing from a UTF-16 `.gitignore`.
 
 ### MSBuild (command line)
 
