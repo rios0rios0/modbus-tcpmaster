@@ -7,7 +7,7 @@ development practices, refer to the **[Development Guide](https://github.com/rio
 
 ## Prerequisites
 
-- [Visual Studio](https://visualstudio.microsoft.com/) 2017+ with the **C++/CLI** workload and **.NET desktop development** components
+- [Visual Studio](https://visualstudio.microsoft.com/) 2019+ with the **C++/CLI** workload and **.NET desktop development** components
 - [.NET Framework](https://dotnet.microsoft.com/en-us/download/dotnet-framework) 4.0+ (for `System::Net::Sockets`)
 - A Modbus TCP slave device (e.g., Yaskawa MP2300S) or a Modbus TCP simulator for testing
 
@@ -25,11 +25,11 @@ development practices, refer to the **[Development Guide](https://github.com/rio
    ```
 5. Alternatively, build from the Developer Command Prompt:
    ```bash
-   msbuild ModbusTCPMaster.sln /p:Configuration=Debug /p:Platform=Win32
+   msbuild ModbusTCPMaster.sln /p:Configuration=Debug /p:Platform=x86
    ```
-6. Run the console test application from the output directory:
+6. Run the console test application (built by the Debug|x86 configuration only):
    ```bash
    Debug\ModbusTCPMaster.exe
    ```
-7. Commit following the [commit conventions](https://github.com/rios0rios0/guide/wiki/Life-Cycle/Git-Flow)
+7. Commit following the [commit conventions](https://github.com/rios0rios0/guide/wiki/Git-Flow)
 8. Open a pull request against `main`

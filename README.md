@@ -13,7 +13,7 @@ A Modbus TCP master implementation for controlling Yaskawa MP2300S motion contro
 - **Modbus TCP protocol implementation** -- constructs and sends compliant Modbus Application Protocol (MBAP) frames with transaction ID, protocol ID, unit ID, and function code headers
 - **Write Multiple Registers (FC 16)** -- implements Modbus function code 16 for writing arrays of 32-bit signed integers to consecutive holding registers on the slave device
 - **MP2300S controller interface** -- dedicated `MP2300SController` class with `Connect`, `Disconnect`, and `WriteML` methods for Yaskawa MP2300S motion controller communication
-- **Error validation** -- parses Modbus exception responses and maps error codes (0x01 through 0x0B) to descriptive messages including Illegal Function, Illegal Data Address, Slave Device Busy, Gateway Path Unavailable, and others
+- **Error validation** -- parses Modbus exception responses and maps error codes (0x01 through 0x08, 0x0A, and 0x0B) to descriptive messages including Illegal Function, Illegal Data Address, Slave Device Busy, Gateway Path Unavailable, and others
 - **Byte-order conversion** -- handles the big-endian to little-endian byte swapping required by the Modbus protocol for 32-bit DINT values across register pairs
 - **Interactive console application** -- includes a `Main.cpp` test harness that connects to a controller and accepts user input for writing 4 register values in a loop
 
@@ -21,7 +21,7 @@ A Modbus TCP master implementation for controlling Yaskawa MP2300S motion contro
 
 - C++/CLI (Visual C++ with .NET managed extensions)
 - .NET Framework (`System::Net::Sockets` for TCP communication)
-- Visual Studio 2017 solution (`.sln` / `.vcxproj`)
+- Visual Studio 2019 solution (`.sln` / `.vcxproj`, platform toolset `v142`)
 - Modbus TCP protocol (port 502)
 
 ## Project Structure
@@ -50,14 +50,14 @@ modbus-tcpmaster/
 
 ### Prerequisites
 
-- Visual Studio 2017 or later with the **C++/CLI** workload and **.NET desktop development** components installed
+- Visual Studio 2019 or later with the **C++/CLI** workload and **.NET desktop development** components installed
 
 ### Building
 
 1. Open `ModbusTCPMaster.sln` in Visual Studio
-2. Select the desired configuration (Debug or Release)
+2. Select the desired configuration (Debug or Release) and platform (x86 or x64)
 3. Build the solution (`Ctrl+Shift+B`)
-4. The compiled DLL and test executable will be in the output directory
+4. Debug|x86 builds the console test executable (`Debug\ModbusTCPMaster.exe`); the other configurations build the DLL (x86 output in `Debug\` or `Release\`, x64 output in `x64\<Config>\`)
 
 ## Usage
 

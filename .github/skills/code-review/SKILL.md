@@ -20,7 +20,7 @@ The canonical engineering standards live in the
 repo-tailored index into that guide plus the rules that only apply here. Precedence, highest
 first:
 
-1. This repository's `.github/copilot-instructions.md`, `CLAUDE.md`, and `CONTRIBUTING.md` —
+1. This repository's `.github/copilot-instructions.md`, `AGENTS.md`, and `CONTRIBUTING.md` —
    they describe *this* codebase and its load-bearing invariants.
 2. The **rios0rios0/guide** wiki — the shared standard.
 3. General language idiom.
@@ -47,8 +47,8 @@ guide disagree, the guide wins and this file should be corrected in the same pul
    then read the diff with `git diff <default>...HEAD` and the file list with
    `git diff <default>...HEAD --name-only`.
 2. **Read whole files, not just hunks.** A hunk cannot show a layering violation, a missing
-   test, or a duplicated helper. Open every changed file in full, plus the files it imports
-   from the layer below.
+   test, or a duplicated helper. Open every changed file in full, plus `MP2300SController.h`
+   whenever `MP2300SController.cpp` or `Main.cpp` changes.
 3. **Check the change set as a unit** — not only the code. A change that alters behaviour,
    configuration, or architecture is incomplete without its changelog entry and its
    documentation update, and that omission is a finding in its own right.
@@ -70,15 +70,15 @@ them before the generic ones.
 - **Error conditions throw a managed exception** (`System::Exception` subclass) with a human-readable message including the Modbus error code in **both decimal and hex**. A silent return, or a `NotImplementedException` that hides a real protocol error, leaves the operator with no diagnosis.
 - **Socket lifetime and timeouts matter.** A blocking read without a timeout hangs the caller when the slave does not answer; a socket left open exhausts the connection slot on the controller.
 - **The default endpoint is `127.0.0.1:502`** in the console harness. A real device address committed as a default points the tool at someone's plant equipment.
-- **Prerequisites are specific**: Visual Studio 2017+ with the C++ desktop workload, C++/CLI support, and .NET Framework 4.0+. A project-file change must keep Debug and Release, Win32 and x64 all building.
-- **Build output (`Debug/`, `Release/`) is gitignored** and must not be committed.
+- **Prerequisites are specific**: Visual Studio 2019+ (toolset `v142`) with the C++ desktop workload, C++/CLI support, and .NET Framework 4.0+. A project-file change must keep Debug and Release, x86 and x64 all building.
+- **Build output (`Debug/`, `Release/`, `x64/`) and `.vs/` must not be committed.** `.gitignore` is saved as UTF-16 LE, which Git does not decode, so it ignores none of them; check the diff for any of these directories.
 
 ### Commands a reviewer should be able to quote
 
 ```bash
-msbuild ModbusTCPMaster.sln /p:Configuration=Debug /p:Platform=Win32
+msbuild ModbusTCPMaster.sln /p:Configuration=Debug /p:Platform=x86
 msbuild ModbusTCPMaster.sln /p:Configuration=Release /p:Platform=x64
-Debug\ModbusTCPMaster.exe        # console harness; needs a Modbus slave on :502
+Debug\ModbusTCPMaster.exe        # console harness (Debug|x86 only); needs a Modbus slave on :502
 ```
 
 ### Dispatch tables over `switch`
@@ -110,7 +110,7 @@ hand.
 - Fragment bodies start with a lowercase verb in simple past tense, capitalise proper nouns
   (GitHub, Go, Docker), and wrap code identifiers and versions in backticks.
 - `README.md` is updated whenever usage, setup, configuration, or architecture changes;
-  `.github/copilot-instructions.md` and `CLAUDE.md` whenever the workflow, commands, or
+  `.github/copilot-instructions.md` and `AGENTS.md` whenever the workflow, commands, or
   structure changes. Documentation and code ship in one commit.
 
 ## Git Flow and pull-request hygiene
@@ -174,7 +174,7 @@ A review that raises noise gets ignored. Do not report these:
 ### Change-control checklist
 - [ ] Changelog entry present for every behavioural change
 - [ ] `README.md` updated if usage, setup, or architecture changed
-- [ ] `.github/copilot-instructions.md` and `CLAUDE.md` updated if the workflow, commands, or structure changed
+- [ ] `.github/copilot-instructions.md` and `AGENTS.md` updated if the workflow, commands, or structure changed
 - [ ] Commit messages follow `type(SCOPE): message` in simple past tense
 - [ ] Breaking changes flagged in the commit footer, the changelog, and the PR description
 
@@ -186,8 +186,8 @@ A review that raises noise gets ignored. Do not report these:
 
 | Severity       | Use for                                                                                                                            |
 |----------------|------------------------------------------------------------------------------------------------------------------------------------|
-| **Critical**   | Broken dependency direction, a leaked secret, an injection or authentication flaw, a missing changelog entry, a banned mock library, a load-bearing invariant broken, a test deleted rather than fixed. |
-| **Warning**    | Naming that departs from the guide, a missing test for a new branch of logic, an unexplained magic value, a stale README or instructions file, a `switch` that should be a map. |
+| **Critical**   | A leaked secret, an injection or authentication flaw, a missing changelog entry, a load-bearing invariant broken (frame layout, register address or count, byte order, managed/native allocation). |
+| **Warning**    | Naming that departs from the guide, an unexplained magic value, a stale README or instructions file, a `switch` that should be a map. |
 | **Suggestion** | Readability, consistency with neighbouring modules, and performance ideas that no rule mandates.                                     |
 
 Rank findings most severe first, and state plainly when nothing blocks the merge — an empty
