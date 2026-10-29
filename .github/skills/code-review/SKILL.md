@@ -71,7 +71,7 @@ them before the generic ones.
 - **Socket lifetime and timeouts matter.** A blocking read without a timeout hangs the caller when the slave does not answer; a socket left open exhausts the connection slot on the controller.
 - **The default endpoint is `127.0.0.1:502`** in the console harness. A real device address committed as a default points the tool at someone's plant equipment.
 - **Prerequisites are specific**: Visual Studio 2019+ (toolset `v142`) with the C++ desktop workload, C++/CLI support, and .NET Framework 4.0+. A project-file change must keep Debug and Release, x86 and x64 all building.
-- **Build output (`Debug/`, `Release/`, `x64/`) must not be committed.** `.gitignore` covers `Debug` and `x64` but not `Release`, so check for a stray `Release/`.
+- **Build output (`Debug/`, `Release/`, `x64/`) and `.vs/` must not be committed.** `.gitignore` is saved as UTF-16 LE, which Git does not decode, so it ignores none of them; check the diff for any of these directories.
 
 ### Commands a reviewer should be able to quote
 
