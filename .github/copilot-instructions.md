@@ -21,7 +21,8 @@ modbus-tcpmaster/
 ├── .changes/
 │   └── unreleased/               # chlog fragments awaiting the next release
 ├── .gitignore
-├── CLAUDE.md                     # Guidance for Claude Code sessions
+├── AGENTS.md                     # Shared instructions for coding agents
+├── CLAUDE.md                     # Imports AGENTS.md for Claude Code
 ├── MP2300SController.h           # Public API: MP2300SController ref class declaration
 ├── MP2300SController.cpp         # Modbus TCP protocol implementation
 ├── Main.cpp                      # Interactive console test harness
@@ -49,7 +50,7 @@ modbus-tcpmaster/
 | Language | C++/CLI (managed Visual C++ with .NET extensions) |
 | Runtime | .NET Framework 4.0+ |
 | Networking | `System::Net::Sockets::Socket` (TCP) |
-| Build system | MSBuild / Visual Studio 2017+ |
+| Build system | MSBuild / Visual Studio 2019+ (toolset `v142`) |
 | Protocol | Modbus TCP (MBAP framing, function code 16) |
 | Target device | Yaskawa MP2300S motion controller |
 
@@ -57,8 +58,8 @@ modbus-tcpmaster/
 
 - **`MP2300SController`** – a single `public ref class` (managed C++ class) that encapsulates the full Modbus TCP lifecycle: connect → write registers → validate response → disconnect.
 - **Frame construction** – `WriteMultipleRegistersMsg()` builds a complete MBAP + PDU byte array from scratch (transaction ID, protocol ID, length, unit ID, function code, start address, register count, byte count, data).
-- **Byte-order conversion** – `ToByteArray(DINT)` swaps bytes from little-endian host order to the big-endian Modbus wire format for 32-bit DINT values split across two 16-bit registers.
-- **Error handling** – `CheckValidate()` parses Modbus exception responses (function code OR'd with 0x80) and throws `System::NotImplementedException` with a descriptive message for codes 0x01–0x0B.
+- **Byte-order conversion** – `ToByteArray(DINT)` splits each 32-bit `DINT` across two 16-bit registers, low word first, each register big-endian (bytes `[0][1]` carry bits 15–0, bytes `[2][3]` bits 31–16).
+- **Error handling** – `CheckValidate()` parses Modbus exception responses (function code OR'd with 0x80) and throws `System::NotImplementedException` with a descriptive message for exception codes 0x01–0x08, 0x0A and 0x0B; any other code falls through without throwing.
 - **Type aliases** defined in `MP2300SController.h`:
   - `BYTE` = `unsigned char`
   - `WORD` = `unsigned short`
@@ -83,16 +84,16 @@ A `release.yaml` workflow runs on every push to `main` and delegates to a reusab
 
 ### Visual Studio (recommended)
 
-1. Open `ModbusTCPMaster.sln` in Visual Studio 2017 or later.
-2. Select **Debug** or **Release** configuration and **Win32** or **x64** platform.
+1. Open `ModbusTCPMaster.sln` in Visual Studio 2019 or later.
+2. Select **Debug** or **Release** configuration and **x86** or **x64** platform.
 3. Press `Ctrl+Shift+B` (or **Build › Build Solution**).
-4. Output artifacts are placed in `Debug\` or `Release\` (gitignored).
+4. x86 output goes to `Debug\` or `Release\`, x64 output to `x64\Debug\` or `x64\Release\`. Only Debug|x86 builds the console `.exe`; the others build the DLL. `.gitignore` covers `Debug` and `x64` but not `Release` — don't commit `Release\`.
 
 ### MSBuild (command line)
 
 ```bash
-# Debug build (Win32)
-msbuild ModbusTCPMaster.sln /p:Configuration=Debug /p:Platform=Win32
+# Debug build (x86, the solution name for the project's Win32 platform)
+msbuild ModbusTCPMaster.sln /p:Configuration=Debug /p:Platform=x86
 
 # Release build (x64)
 msbuild ModbusTCPMaster.sln /p:Configuration=Release /p:Platform=x64
@@ -102,7 +103,7 @@ Typical build time: **< 10 seconds** on a modern machine.
 
 ### Prerequisites
 
-- Visual Studio 2017 or later with:
+- Visual Studio 2019 or later with:
   - **Desktop development with C++** workload
   - **C++/CLI support** individual component
   - **.NET desktop development** workload
@@ -114,7 +115,7 @@ Typical build time: **< 10 seconds** on a modern machine.
 Debug\ModbusTCPMaster.exe
 ```
 
-The application connects to `127.0.0.1:502`, then loops prompting for four 32-bit integer values and writes them to registers 0–7 on the slave device. Requires a live Modbus TCP slave or a simulator (e.g., Modbus Slave by Witte Software).
+Built by the Debug|x86 configuration only. The application connects to `127.0.0.1:502`, then loops prompting for four 32-bit integer values and writes them to registers 0–7 on the slave device. Requires a live Modbus TCP slave or a simulator (e.g., Modbus Slave by Witte Software).
 
 ## Testing
 
@@ -149,7 +150,7 @@ There is no automated test suite. Validation is done manually:
 | Task | How |
 |---|---|
 | Add a new Modbus function code | Add a method to `MP2300SController` following the pattern of `WriteML`/`WriteMultipleRegistersMsg` |
-| Support a new target device | Subclass or wrap `MP2300SController`; override `Connect` parameters (IP, port, slave address) |
+| Point at another device | Pass the IP and port to the `MP2300SController(System::String^ ip, WORD port)` constructor; the slave address (1) is a local constant in `WriteML` |
 | Change buffer size | Update `READ_BUFFER_SIZE` / `WRITE_BUFFER_SIZE` constants in `MP2300SController.h` |
 | Handle a new Modbus exception code | Add a `case` to the `CheckValidate` switch statement |
 | Build for x64 | Use `Platform=x64` in MSBuild or select the x64 platform in Visual Studio |

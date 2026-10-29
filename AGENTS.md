@@ -1,19 +1,21 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI coding agents (Claude Code, Codex, Cursor, GitHub Copilot) when working with code in this repository.
 
 ## Project
 
-C++/CLI DLL implementing Modbus TCP (function code 16 — Write Multiple Registers) for Yaskawa MP2300S motion controllers. Two source files: `MP2300SController.h/.cpp` (library) and `Main.cpp` (interactive console test harness).
+C++/CLI library implementing Modbus TCP (function code 16 — Write Multiple Registers) for Yaskawa MP2300S motion controllers. `MP2300SController.h/.cpp` is the library; `Main.cpp` is an interactive console test harness.
 
 ## Build
 
-Windows-only. Requires Visual Studio 2017+ with the **C++/CLI support** component, **Desktop development with C++**, and **.NET desktop development** workloads. .NET Framework 4.0+.
+Windows-only. Requires Visual Studio 2019+ (the project uses platform toolset `v142`) with the **C++/CLI support** component, **Desktop development with C++**, and **.NET desktop development** workloads. .NET Framework 4.0+.
 
 ```bash
-msbuild ModbusTCPMaster.sln /p:Configuration=Debug /p:Platform=Win32
+msbuild ModbusTCPMaster.sln /p:Configuration=Debug /p:Platform=x86
 msbuild ModbusTCPMaster.sln /p:Configuration=Release /p:Platform=x64
 ```
+
+Solution platforms are `x86` and `x64` (`x86` maps to the project's `Win32`); `/p:Platform=Win32` is not a valid solution platform. Only Debug|x86 builds the console harness `Debug\ModbusTCPMaster.exe`; the other three configurations build `ModbusTCPMaster.dll`. x64 output goes to `x64\<Config>\`. `.gitignore` covers `Debug` and `x64` but not `Release` — do not commit `Release\`.
 
 No automated test suite. Manual testing against a Modbus TCP simulator on port 502.
 
@@ -23,6 +25,7 @@ No automated test suite. Manual testing against a Modbus TCP simulator on port 5
 - Managed allocations use `gcnew`; do not mix with native `new` for managed types.
 - Protocol and frame logic stays in `MP2300SController.cpp`; `Main.cpp` is only the test harness.
 - Error conditions throw `System::Exception` subclasses with messages including the Modbus error code in both decimal and hex.
+- `MP2300SController.cpp` and `Main.cpp` are Windows-1252 encoded, not UTF-8; keep that encoding when editing them.
 - Conventional commits with `feat/`, `fix/`, `chore/` branch prefixes. See the [Development Guide](https://github.com/rios0rios0/guide/wiki).
 
 <!-- chlog:start -->
