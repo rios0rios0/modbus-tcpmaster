@@ -15,7 +15,7 @@ msbuild ModbusTCPMaster.sln /p:Configuration=Debug /p:Platform=x86
 msbuild ModbusTCPMaster.sln /p:Configuration=Release /p:Platform=x64
 ```
 
-Solution platforms are `x86` and `x64` (`x86` maps to the project's `Win32`); `/p:Platform=Win32` is not a valid solution platform. Only Debug|x86 builds the console harness `Debug\ModbusTCPMaster.exe`; the other three configurations build `ModbusTCPMaster.dll`. x64 output goes to `x64\<Config>\`. `.gitignore` is saved as UTF-16 LE, which Git does not decode, so none of its entries (`.vs`, `Debug`, `x64`) take effect — never commit `Debug\`, `Release\`, `x64\` or `.vs\`.
+Solution platforms are `x86` and `x64` (`x86` maps to the project's `Win32`); `/p:Platform=Win32` is not a valid solution platform. Only Debug|x86 builds the console harness `Debug\ModbusTCPMaster.exe`; the other three configurations build `ModbusTCPMaster.dll`. x64 output goes to `x64\<Config>\`. `.gitignore` ignores `.vs\`, `Debug\`, `Release\` and `x64\`; keep it UTF-8 — Git does not decode UTF-16, so a `.gitignore` re-saved as UTF-16 (as Windows PowerShell's `>` writes it) ignores nothing.
 
 No automated test suite. Manual testing against a Modbus TCP simulator on port 502.
 
