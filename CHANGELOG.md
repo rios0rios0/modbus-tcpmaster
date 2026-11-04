@@ -22,6 +22,16 @@ Exceptions are acceptable depending on the circumstances (critical bug fixes tha
 
 ## [Unreleased]
 
+## [0.5.2] - 2026-11-04
+
+### Changed
+
+- moved the agent instructions from `CLAUDE.md` to `AGENTS.md`, keeping a `CLAUDE.md` that imports it, and refreshed `AGENTS.md`, `.github/copilot-instructions.md`, `.github/skills/code-review/SKILL.md`, `README.md`, and `CONTRIBUTING.md` to build with `/p:Platform=x86` (the solution has no `Win32` platform), require Visual Studio 2019 (toolset `v142`), note that only Debug|x86 builds the console `.exe` and that `.gitignore` is saved as UTF-16, so Git ignores none of the build output directories, and correct the byte-order and exception-code descriptions
+
+### Fixed
+
+- fixed `.gitignore`, which was saved as UTF-16 LE so Git ignored none of its entries, by re-saving it as UTF-8 and adding the missing `Release` output directory; updated `AGENTS.md`, `.github/copilot-instructions.md` and the code-review skill to match
+
 ## [0.5.1] - 2026-09-08
 
 ### Changed
